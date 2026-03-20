@@ -13,6 +13,11 @@ st.markdown("""
         text-align: center; background-color: #ffffff; height: 100%;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
+    /* Botón de Salida personalizado sin iconos */
+    .stButton>button {
+        width: 100%; background-color: #000000; color: white !important;
+        border: 1px solid #ffffff; font-weight: bold;
+    }
     .phva-circle {
         width: 80px; height: 80px; background-color: #800000;
         color: white; border-radius: 50%; display: flex;
@@ -40,13 +45,22 @@ if not st.session_state['auth']:
         st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
-# --- 4. MENÚ LATERAL ---
+# --- 4. BARRA LATERAL (LOGO Y CONTACTOS COMPLETOS) ---
 with st.sidebar:
+    # Logo Oficial
     st.image("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg")
+    
+    st.markdown("### 📱 CONTACTO OFICIAL")
+    st.write("📞 **Tel:** 301 601 5891")
+    st.write("📧 **Email:** jplprevencionistas@gmail.com")
+    st.write("🌐 **FB:** Jplprevencionistas")
+    
     st.markdown("---")
-    menu = st.radio("MENÚ:", ["📊 Panel de Control", "🛡️ Auditoría 60 Ítems", "💰 Licencias de Uso"])
+    menu = st.radio("MÓDULOS DE GESTIÓN:", ["📊 Panel de Control", "🛡️ Auditoría 60 Ítems", "💰 Licencias de Uso"])
+    
     st.markdown("---")
-    if st.button("🚪 CERRAR SESIÓN"):
+    # Botón de salida limpio, solo texto
+    if st.button("CERRAR SESIÓN"):
         st.session_state['auth'] = False
         st.rerun()
 
@@ -71,10 +85,12 @@ if menu == "📊 Panel de Control":
 
 elif menu == "🛡️ Auditoría 60 Ítems":
     st.title("🛡️ Auditoría Resolución 0312")
+    st.write("Complete los estándares para generar el informe.")
     with st.form("audit"):
-        st.selectbox("¿Recursos financieros asignados?", ["Cumple", "No Cumple", "N/A"])
-        st.selectbox("¿Afiliación a Seguridad Social?", ["Cumple", "No Cumple", "N/A"])
-        if st.form_submit_button("Guardar Avance"): st.success("¡Datos registrados!")
+        st.selectbox("1. ¿Recursos financieros asignados?", ["Cumple", "No Cumple", "N/A"])
+        st.selectbox("2. ¿Afiliación a Seguridad Social?", ["Cumple", "No Cumple", "N/A"])
+        st.selectbox("3. ¿Conformación de COPASST?", ["Cumple", "No Cumple", "N/A"])
+        if st.form_submit_button("GUARDAR AVANCE"): st.success("¡Datos registrados exitosamente!")
 
 elif menu == "💰 Licencias de Uso":
     st.title("💰 Planes de Afiliación")
@@ -82,12 +98,12 @@ elif menu == "💰 Licencias de Uso":
     
     with col1:
         st.markdown('<div class="price-card"><h3>PEQUEÑA</h3><p>1-10 emp.</p><h2>$40.000</h2></div>', unsafe_allow_html=True)
-        st.link_button("ADQUIRIR 40K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Pequeña%20($40k)")
+        st.link_button("ADQUIRIR 40K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Pequeña")
 
     with col2:
         st.markdown('<div class="price-card"><h3>MEDIANA</h3><p>11-50 emp.</p><h2>$60.000</h2></div>', unsafe_allow_html=True)
-        st.link_button("ADQUIRIR 60K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Mediana%20($60k)")
+        st.link_button("ADQUIRIR 60K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Mediana")
 
     with col3:
         st.markdown('<div class="price-card"><h3>GRANDE</h3><p>51+ emp.</p><h2>$100.000</h2></div>', unsafe_allow_html=True)
-        st.link_button("ADQUIRIR 100K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Grande%20($100k)")
+        st.link_button("ADQUIRIR 100K", f"https://wa.me/{num_wa}?text=Hola%20JPL,%20quiero%20información%20del%20Plan%20Grande")

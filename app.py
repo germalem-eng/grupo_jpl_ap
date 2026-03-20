@@ -126,3 +126,7 @@ elif menu == "💰 Licencias de Uso":
             alerta_socio("Grande $100.000")
             js = f"window.open('https://wa.me/{num_wa}?text=Hola,%20deseo%20afiliarme%20al%20Plan%20Grande')"
             st.components.v1.html(f'<script>{js}</script>', height=0)
+        if st.button("ADQUIRIR 100K"):
+            alerta_socio("Grande $100.000")
+            js = f"window.open('https://wa.me/{num_wa}?text=Hola,%20deseo%20afiliarme%20al%20Plan%20Grande')"
+            st.components.v1.html(f'<script>{js}</script>', height=0)

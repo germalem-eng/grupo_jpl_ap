@@ -98,26 +98,24 @@ elif menu == "🛡️ Auditoría 60 Ítems":
 
 elif menu == "💰 Licencias de Uso":
     st.title("💰 Planes de Afiliación")
-    st.info("Al dar clic, se enviará un correo y se abrirá WhatsApp.")
+    st.info("Al elegir un plan, se enviará una notificación al Ing. Gerardo y se abrirá el chat de ventas.")
+    
     col_1, col_2, col_3 = st.columns(3)
     
     with col_1:
-        st.markdown('<div class="price-card"><h3>PEQUEÑA</h3><h2>$40.000</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="price-card"><h3>PEQUEÑA</h3><h2>$40.000</h2><p>1-10 emp.</p></div>', unsafe_allow_html=True)
         if st.button("ADQUIRIR 40K"):
             alerta_socio("Pequeña $40.000")
-            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Pequeño')"
-            st.components.v1.html(f'<script>{js}</script>', height=0)
+            st.markdown(f'<a href="https://wa.me/{num_wa}?text=Hola,%20deseo%20el%20Plan%20Pequeño" target="_blank" style="text-decoration:none;"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">✅ ABRIR WHATSAPP</button></a>', unsafe_allow_html=True)
 
     with col_2:
-        st.markdown('<div class="price-card"><h3>MEDIANA</h3><h2>$60.000</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="price-card"><h3>MEDIANA</h3><h2>$60.000</h2><p>11-50 emp.</p></div>', unsafe_allow_html=True)
         if st.button("ADQUIRIR 60K"):
             alerta_socio("Mediana $60.000")
-            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Mediano')"
-            st.components.v1.html(f'<script>{js}</script>', height=0)
+            st.markdown(f'<a href="https://wa.me/{num_wa}?text=Hola,%20deseo%20el%20Plan%20Mediano" target="_blank" style="text-decoration:none;"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">✅ ABRIR WHATSAPP</button></a>', unsafe_allow_html=True)
 
     with col_3:
-        st.markdown('<div class="price-card"><h3>GRANDE</h3><h2>$100.000</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="price-card"><h3>GRANDE</h3><h2>$100.000</h2><p>+50 emp.</p></div>', unsafe_allow_html=True)
         if st.button("ADQUIRIR 100K"):
             alerta_socio("Grande $100.000")
-            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Grande')"
-            st.components.v1.html(f'<script>{js}</script>', height=0)
+            st.markdown(f'<a href="https://wa.me/{num_wa}?text=Hola,%20deseo%20el%20Plan%20Grande" target="_blank" style="text-decoration:none;"><button style="width:100%; background-color:#25D366; color:white; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">✅ ABRIR WHATSAPP</button></a>', unsafe_allow_html=True)

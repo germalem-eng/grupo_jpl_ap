@@ -19,7 +19,7 @@ st.markdown("""
 # --- 2. FUNCIÓN DE NOTIFICACIÓN ---
 def alerta_socio(plan_nombre):
     mi_correo = "germalem@gmail.com"
-    clave_google = "pelmjgainynleacx" 
+    clave_google = "gwjjbwsnynpndaon" 
     msg = MIMEText(f"Ing. Gerardo, un cliente está interesado en el Plan: {plan_nombre}")
     msg['Subject'] = f"🚀 NUEVO INTERESADO JPL - {plan_nombre}"
     msg['From'] = mi_correo

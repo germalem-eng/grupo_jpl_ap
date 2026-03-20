@@ -72,7 +72,7 @@ if menu == "📊 Panel de Control":
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         st.markdown('<div class="phva-circle">P</div><p style="text-align:center"><b>PLANEAR</b></p>', unsafe_allow_html=True)
-        if st.button("Ver Cronograma"): st.success("📅 Plan activo.")
+        if st.button("Ver Cronograma"): st.success("📅 Plan de trabajo activo.")
     with c2:
         st.markdown('<div class="phva-circle">H</div><p style="text-align:center"><b>HACER</b></p>', unsafe_allow_html=True)
         st.file_uploader("Cargar registros")
@@ -81,7 +81,7 @@ if menu == "📊 Panel de Control":
         st.progress(65)
     with c4:
         st.markdown('<div class="phva-circle">A</div><p style="text-align:center"><b>ACTUAR</b></p>', unsafe_allow_html=True)
-        st.text_area("Acciones:")
+        st.text_area("Acciones preventivas:")
 
 elif menu == "🛡️ Auditoría 60 Ítems":
     st.title("🛡️ Auditoría Resolución 0312")
@@ -94,7 +94,7 @@ elif menu == "🛡️ Auditoría 60 Ítems":
             st.selectbox("¿Evaluaciones médicas?", ["Cumple", "No Cumple", "N/A"])
             st.selectbox("¿Matriz de peligros?", ["Cumple", "No Cumple", "N/A"])
         if st.form_submit_button("GENERAR REPORTE"):
-            st.success("Auditoría guardada.")
+            st.success("Auditoría guardada exitosamente.")
 
 elif menu == "💰 Licencias de Uso":
     st.title("💰 Planes de Afiliación")
@@ -105,4 +105,19 @@ elif menu == "💰 Licencias de Uso":
         st.markdown('<div class="price-card"><h3>PEQUEÑA</h3><h2>$40.000</h2></div>', unsafe_allow_html=True)
         if st.button("ADQUIRIR 40K"):
             alerta_socio("Pequeña $40.000")
-            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%2
+            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Pequeño')"
+            st.components.v1.html(f'<script>{js}</script>', height=0)
+
+    with col_2:
+        st.markdown('<div class="price-card"><h3>MEDIANA</h3><h2>$60.000</h2></div>', unsafe_allow_html=True)
+        if st.button("ADQUIRIR 60K"):
+            alerta_socio("Mediana $60.000")
+            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Mediano')"
+            st.components.v1.html(f'<script>{js}</script>', height=0)
+
+    with col_3:
+        st.markdown('<div class="price-card"><h3>GRANDE</h3><h2>$100.000</h2></div>', unsafe_allow_html=True)
+        if st.button("ADQUIRIR 100K"):
+            alerta_socio("Grande $100.000")
+            js = f"window.open('https://wa.me/{num_wa}?text=Deseo%20el%20Plan%20Grande')"
+            st.components.v1.html(f'<script>{js}</script>', height=0)

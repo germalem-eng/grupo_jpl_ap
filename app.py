@@ -80,10 +80,10 @@ if opcion == "📊 Panel de Control":
     with col_a:
         st.markdown('<div class="phva-circle">A</div><p style="text-align:center"><b>ACTUAR</b></p>', unsafe_allow_html=True)
     
-    st.info("Bienvenido, Ingeniero Gerardo. El sistema está sincronizado con la normativa 2026.")
+    st.info("Bienvenido, Ingeniero Juan Prieto. El sistema está sincronizado con la normativa 2026.")
 
-elif opcion == "💰 Licencias de Uso":
-    st.title("💳 Planes y Licencias Mensuales")
+elif opcion == "Licencias de Uso":
+    st.title(" Planes y Licencias Mensuales")
     c1, c2, c3 = st.columns(3)
     
     with c1:

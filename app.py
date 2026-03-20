@@ -13,7 +13,6 @@ st.markdown("""
         text-align: center; background-color: #ffffff; height: 100%;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
-    /* Botón de Salida personalizado sin iconos */
     .stButton>button {
         width: 100%; background-color: #000000; color: white !important;
         border: 1px solid #ffffff; font-weight: bold;
@@ -24,6 +23,13 @@ st.markdown("""
         align-items: center; justify-content: center;
         font-size: 28px; font-weight: bold; margin: 0 auto;
         border: 3px solid #000000;
+    }
+    /* Estilo para los hipervínculos del sidebar */
+    .sidebar-link {
+        color: white !important;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 5px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -45,21 +51,25 @@ if not st.session_state['auth']:
         st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
-# --- 4. BARRA LATERAL (LOGO Y CONTACTOS COMPLETOS) ---
+# --- 4. BARRA LATERAL (DATOS CON HIPERVÍNCULOS) ---
 with st.sidebar:
-    # Logo Oficial
     st.image("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg")
     
-    st.markdown("### 📱 CONTACTO OFICIAL")
-    st.write("📞 **Tel:** 301 601 5891")
-    st.write("📧 **Email:** jplprevencionistas@gmail.com")
-    st.write("🌐 **FB:** Jplprevencionistas")
+    st.markdown("### CONTACTO OFICIAL")
+    
+    # Teléfono (Llamada directa)
+    st.markdown('<a href="tel:3016015891" class="sidebar-link">Tel: 301 601 5891</a>', unsafe_allow_html=True)
+    
+    # Mail (Correo directo)
+    st.markdown('<a href="mailto:jplprevencionistas@gmail.com" class="sidebar-link">mail: jplprevencionistas@gmail.com</a>', unsafe_allow_html=True)
+    
+    # Facebook (Enlace directo sin "FB")
+    st.markdown('<a href="https://facebook.com/jplprevencionistas" target="_blank" class="sidebar-link">Jplprevencionistas</a>', unsafe_allow_html=True)
     
     st.markdown("---")
     menu = st.radio("MÓDULOS DE GESTIÓN:", ["📊 Panel de Control", "🛡️ Auditoría 60 Ítems", "💰 Licencias de Uso"])
     
     st.markdown("---")
-    # Botón de salida limpio, solo texto
     if st.button("CERRAR SESIÓN"):
         st.session_state['auth'] = False
         st.rerun()
@@ -85,12 +95,11 @@ if menu == "📊 Panel de Control":
 
 elif menu == "🛡️ Auditoría 60 Ítems":
     st.title("🛡️ Auditoría Resolución 0312")
-    st.write("Complete los estándares para generar el informe.")
     with st.form("audit"):
         st.selectbox("1. ¿Recursos financieros asignados?", ["Cumple", "No Cumple", "N/A"])
         st.selectbox("2. ¿Afiliación a Seguridad Social?", ["Cumple", "No Cumple", "N/A"])
         st.selectbox("3. ¿Conformación de COPASST?", ["Cumple", "No Cumple", "N/A"])
-        if st.form_submit_button("GUARDAR AVANCE"): st.success("¡Datos registrados exitosamente!")
+        if st.form_submit_button("GUARDAR AVANCE"): st.success("¡Datos registrados!")
 
 elif menu == "💰 Licencias de Uso":
     st.title("💰 Planes de Afiliación")

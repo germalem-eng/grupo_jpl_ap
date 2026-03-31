@@ -1,124 +1,119 @@
 import streamlit as st
 import time
+import pandas as pd
+import numpy as np
 
-# --- 1. CONFIGURACIÓN Y BASE DE DATOS ---
-st.set_page_config(page_title="APP JPL | SG-SST", layout="centered", initial_sidebar_state="expanded")
+# --- 1. CONFIGURACIÓN ---
+st.set_page_config(page_title="L.I.N.A. | Grupo JPL", layout="wide", initial_sidebar_state="expanded")
 
-# Clientes con permiso de edición (Asociados/Premium)
-usuarios_activos = {
-    "gerardo@mym.com": "1234",
-    "cliente@premium.com": "jpl2026"
-}
-
-# --- 2. ESTILOS VISUALES (Vinotinto, Gris y Marca de Agua) ---
+# --- 2. ESTILOS CSS ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Chilanka&display=swap');
     html, body, [class*="st-"], h1, h2, h3, p, label { font-family: 'Chilanka', cursive !important; }
 
+    /* Sidebar Vinotinto */
+    [data-testid="stSidebar"] { background-color: #800000; color: white; }
+    [data-testid="stSidebar"] * { color: white !important; }
+    
+    /* Fondo Principal con Marca de Agua */
     .stApp {
         background-color: #F2F2F2;
         background-image: url("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg");
-        background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: 50%;
+        background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: 45%;
     }
     .stApp::before {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background-color: rgba(242, 242, 242, 0.96); z-index: -1;
+        background-color: rgba(242, 242, 242, 0.94); z-index: -1;
     }
 
-    .top-bar-jpl { background-color: #800000; padding: 20px; border-radius: 0 0 30px 30px; color: white; text-align: center; margin: -65px -20px 25px -20px; }
-    .card-proceso { background-color: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; border-left: 10px solid #800000; margin-bottom: 15px; }
-    .info-requisito { background-color: #e8e8e8; padding: 10px; border-radius: 10px; border: 1px solid #800000; font-size: 0.9em; margin-bottom: 20px; }
-    .stButton>button { background-color: #000000 !important; color: white !important; border-radius: 12px; font-weight: bold; width: 100%; }
+    .top-bar { background-color: #800000; padding: 20px; border-radius: 0 0 30px 30px; color: white; text-align: center; margin-top: -60px; }
+    .footer { position: fixed; bottom: 0; left: 0; width: 100%; background-color: #F2F2F2; color: #555; text-align: center; padding: 5px; font-size: 12px; border-top: 1px solid #800000; z-index: 100; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. CONTROL DE SESIÓN ---
-if 'pantalla' not in st.session_state: st.session_state.pantalla = 'splash'
-if 'premium' not in st.session_state: st.session_state.premium = False
+# --- 3. LÓGICA DE SESIÓN Y SEGURIDAD ---
+if 'pantalla' not in st.session_state: st.session_state.pantalla = 'inicio'
+if 'autenticado' not in st.session_state: st.session_state.autenticado = False
 
-# --- 4. BARRA LATERAL (LOGIN) ---
+# Simulación de código de video (válido 15 días)
+CODIGO_VIDEO_OK = "JPL2026" 
+
+# --- 4. BARRA LATERAL ---
 with st.sidebar:
-    st.markdown("### 🔐 ACCESO ASOCIADOS")
-    if not st.session_state.premium:
-        u = st.text_input("Correo")
-        p = st.text_input("Clave", type="password")
+    st.image("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg", width=120)
+    st.markdown("## ACCESO L.I.N.A.")
+    
+    if not st.session_state.autenticado:
+        user = st.text_input("Usuario")
+        pw = st.text_input("Clave", type="password")
         if st.button("INGRESAR"):
-            if u in usuarios_activos and usuarios_activos[u] == p:
-                st.session_state.premium = True
+            if user == "Gerardo" and pw == "1234": # Ejemplo
+                st.session_state.autenticado = True
                 st.rerun()
-            else: st.error("Acceso denegado")
     else:
-        st.success("✅ Modo Edición Activo")
-        if st.button("Cerrar Sesión"):
-            st.session_state.premium = False
+        st.success("Sesión Iniciada")
+        if st.button("CERRAR SESIÓN"):
+            st.session_state.autenticado = False
             st.rerun()
-
-# --- 5. LÓGICA DE PANTALLAS ---
-
-if st.session_state.pantalla == 'splash':
-    st.markdown('<div style="text-align:center; margin-top:150px;">', unsafe_allow_html=True)
-    st.image("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg", width=250)
-    st.markdown("<h1 style='color:#800000; font-size:60px;'>APP JPL</h1>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    time.sleep(2)
-    st.session_state.pantalla = 'inicio'
-    st.rerun()
-
-elif st.session_state.pantalla == 'inicio':
-    st.markdown('<div class="top-bar-jpl"><h1>APP JPL</h1></div>', unsafe_allow_html=True)
-    st.markdown("### Seleccione su categoría (Res. 0312):")
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        if st.button("Microempresas\n(< 10 emp / Riesgo I-III)"):
-            st.session_state.nivel = "7"; st.session_state.pantalla = 'evaluacion'; st.rerun()
-    with col2:
-        if st.button("Pymes\n(11-50 emp / Riesgo I-III)"):
-            st.session_state.nivel = "21"; st.session_state.pantalla = 'evaluacion'; st.rerun()
-    with col3:
-        if st.button("Grandes / Riesgo IV-V\n(62 Estándares)"):
-            st.session_state.nivel = "62"; st.session_state.pantalla = 'evaluacion'; st.rerun()
+    st.divider()
+    if st.button("🏠 INICIO"): st.session_state.pantalla = 'inicio'; st.rerun()
+    if st.button("📊 ESTADÍSTICAS"): st.session_state.pantalla = 'graficos'; st.rerun()
+    if st.button("🎥 VIDEOTECA"): st.session_state.pantalla = 'videos'; st.rerun()
 
-elif st.session_state.pantalla == 'evaluacion':
-    st.markdown(f'<div class="top-bar-jpl"><h3>EVALUACIÓN: {st.session_state.nivel} ESTÁNDARES</h3></div>', unsafe_allow_html=True)
+# --- 5. PANTALLAS ---
+
+# --- PANTALLA: INICIO ---
+if st.session_state.pantalla == 'inicio':
+    st.markdown('<div class="top-bar"><h1>L.I.N.A.</h1><p>Logística • Inteligencia • Nuevos • Algoritmos</p></div>', unsafe_allow_html=True)
+    st.write("### 📂 Evaluación Estándares Mínimos")
     
-    # Mostrar requisitos de personal según la ley
-    if st.session_state.nivel == "7":
-        st.markdown('<div class="info-requisito"><b>Requisito:</b> Técnico en SST con licencia y 1 año de experiencia.</div>', unsafe_allow_html=True)
-    elif st.session_state.nivel == "21":
-        st.markdown('<div class="info-requisito"><b>Requisito:</b> Tecnólogo en SST con licencia y 2 años de experiencia.</div>', unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    with c1: st.button("🏢 Micro (<10)")
+    with c2: st.button("🏬 Pyme (11-50)")
+    with c3: st.button("🏭 Grande (>50 / R IV-V)")
+    
+    if not st.session_state.autenticado:
+        st.info("⚠️ Modo Lectura: Inicie sesión para interactuar.")
+
+# --- PANTALLA: GRÁFICOS (Estadísticas descargables) ---
+elif st.session_state.pantalla == 'graficos':
+    st.markdown('<div class="top-bar"><h2>PANEL DE ESTADÍSTICAS JPL</h2></div>', unsafe_allow_html=True)
+    
+    if st.session_state.autenticado:
+        col_g1, col_g2 = st.columns(2)
+        
+        with col_g1:
+            st.write("#### Cumplimiento General")
+            data = pd.DataFrame({"Estado": ["Cumple", "No Cumple"], "Valor": [75, 25]})
+            st.pie_chart(data, x="Estado", y="Valor")
+            
+        with col_g2:
+            st.write("#### Histórico de Hallazgos")
+            chart_data = pd.DataFrame(np.random.randn(20, 2), columns=['Mes Ant', 'Mes Act'])
+            st.line_chart(chart_data)
+            
+        st.download_button("📥 Descargar Reporte Estadístico (PDF/Excel)", data="...", file_name="reporte_jpl.txt")
     else:
-        st.markdown('<div class="info-requisito"><b>Requisito:</b> Profesional o Especialista con licencia vigente.</div>', unsafe_allow_html=True)
+        st.warning("Acceso exclusivo para asociados actuales o Premium.")
 
-    if not st.session_state.premium:
-        st.warning("⚠️ MODO LECTURA: Para calificar estos ítems debe ser Cliente Asociado.")
+# --- PANTALLA: VIDEOS (Con código de verificación) ---
+elif st.session_state.pantalla == 'videos':
+    st.markdown('<div class="top-bar"><h2>REPOSITORIO TÉCNICO JPL</h2></div>', unsafe_allow_html=True)
+    
+    check_code = st.text_input("Ingrese código de acceso (Válido por 15 días calendario):", type="password")
+    
+    if check_code == CODIGO_VIDEO_OK:
+        st.success("Acceso concedido.")
+        st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ") # Ejemplo de video
+        st.write("📂 **Material de descarga:** [Guía_SST_JPL.pdf]")
+    else:
+        st.error("Código incorrecto o vencido (Incluye fines de semana y festivos).")
 
-    def mostrar_item(cod, desc):
-        st.markdown(f'<div class="card-proceso"><b>{cod}</b> - {desc}</div>', unsafe_allow_html=True)
-        return st.selectbox("Estado:", ["Pendiente", "Cumple", "No Cumple", "N/A"], key=cod, disabled=not st.session_state.premium)
-
-    # --- DESPLIEGUE DE ÍTEMS SEGÚN EL BOTÓN PRESIONADO ---
-    if st.session_state.nivel == "7":
-        mostrar_item("1.1.1", "Responsable del Sistema de Gestión de SST")
-        mostrar_item("1.1.3", "Asignación de recursos para el SG-SST")
-        mostrar_item("1.2.1", "Afiliación al Sistema de Seguridad Social Integral")
-        mostrar_item("2.1.1", "Capacitación en SST")
-        mostrar_item("3.1.1", "Plan Anual de Trabajo")
-        mostrar_item("4.1.1", "Evaluaciones médicas ocupacionales")
-        mostrar_item("6.1.1", "Identificación de peligros y valoración de riesgos")
-
-    elif st.session_state.nivel == "21":
-        st.info("Mostrando 21 estándares para Pymes...")
-        mostrar_item("1.1.1", "Asignación de responsable")
-        mostrar_item("1.1.3", "Recursos financieros y técnicos")
-        # Aquí se completarían los 21 conforme a la resolución
-
-    elif st.session_state.nivel == "62":
-        st.info("Mostrando 62 estándares (Riesgo IV/V o > 50 emp)...")
-        mostrar_item("1.1.1", "Responsable del SG-SST")
-        mostrar_item("4.2.1", "Plan de Emergencias y Contingencias")
-        # Aquí se completarían los 62 conforme a la resolución
-
-    if st.button("⬅️ VOLVER AL INICIO"):
-        st.session_state.pantalla = 'inicio'; st.rerun()
+# --- 6. PIE DE PÁGINA ---
+st.markdown(f"""
+<div class="footer">
+    © 2026 | L.I.N.A. V2.0 | Desarrollado por Ing. Gerardo Martinez | <b>JPL Prevencionistas SAS</b>
+</div>
+""", unsafe_allow_html=True)

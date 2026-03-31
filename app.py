@@ -2,15 +2,15 @@ import streamlit as st
 import time
 
 # --- 1. CONFIGURACIÓN Y BASE DE DATOS ---
-st.set_page_config(page_title="L.I.N.A. | Grupo JPL", layout="centered", initial_sidebar_state="expanded")
+st.set_page_config(page_title="APP JPL | Soluciones MyM", layout="centered", initial_sidebar_state="expanded")
 
-# Usuarios con permiso de edición (Asociados/Premium)
+# Base de datos de asociados (Asociados actuales o Premium nuevos)
 usuarios_activos = {
     "gerardo@mym.com": "1234",
     "cliente@premium.com": "jpl2026"
 }
 
-# --- 2. ESTILOS CSS (Vinotinto, Chilanka y Marca de Agua) ---
+# --- 2. ESTILOS VISUALES (Vinotinto y Marca de Agua) ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Chilanka&display=swap');
@@ -19,112 +19,115 @@ st.markdown("""
     .stApp {
         background-color: #F2F2F2;
         background-image: url("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg");
-        background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: 55%;
+        background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: 50%;
     }
     .stApp::before {
         content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background-color: rgba(242, 242, 242, 0.96); z-index: -1;
     }
 
-    .top-bar-jpl { background-color: #800000; padding: 20px; border-radius: 0 0 30px 30px; color: white; text-align: center; margin: -65px -20px 25px -20px; box-shadow: 0px 4px 10px rgba(0,0,0,0.3); }
-    .card-proceso { background-color: rgba(255, 255, 255, 0.92); padding: 15px; border-radius: 20px; border-left: 10px solid #800000; margin-bottom: 15px; box-shadow: 0px 2px 8px rgba(0,0,0,0.1); }
+    .top-bar-jpl { background-color: #800000; padding: 20px; border-radius: 0 0 30px 30px; color: white; text-align: center; margin: -65px -20px 25px -20px; }
+    .card-proceso { background-color: rgba(255, 255, 255, 0.95); padding: 15px; border-radius: 20px; border-left: 10px solid #800000; margin-bottom: 15px; box-shadow: 0px 2px 8px rgba(0,0,0,0.1); }
+    
+    /* Estilo de botones */
     .stButton>button { background-color: #000000 !important; color: white !important; border-radius: 12px; font-weight: bold; width: 100%; }
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ESTADO DE SESIÓN ---
+# --- 3. CONTROL DE SESIÓN ---
 if 'pantalla' not in st.session_state: st.session_state.pantalla = 'splash'
 if 'premium' not in st.session_state: st.session_state.premium = False
 
-# --- 4. BARRA LATERAL (LOGIN SIEMPRE PRESENTE) ---
+# --- 4. BARRA LATERAL (LOGIN ASOCIADOS) ---
 with st.sidebar:
-    st.title("🔐 Mi Cuenta")
+    st.markdown("### 🔐 ACCESO ASOCIADOS")
     if not st.session_state.premium:
-        email = st.text_input("Correo asociado")
-        password = st.text_input("Contraseña", type="password")
-        if st.button("Validar Acceso"):
-            if email in usuarios_activos and usuarios_activos[email] == password:
+        user_input = st.text_input("Correo electrónico")
+        pass_input = st.text_input("Clave", type="password")
+        if st.button("INGRESAR"):
+            if user_input in usuarios_activos and usuarios_activos[user_input] == pass_input:
                 st.session_state.premium = True
+                st.success("Acceso Premium Activado")
                 st.rerun()
             else:
-                st.error("Credenciales incorrectas")
+                st.error("Credenciales no válidas")
     else:
-        st.success("✅ Modo Premium Activo")
+        st.success(f"Sesión Activa: {st.session_state.get('user', 'Asociado')}")
         if st.button("Cerrar Sesión"):
             st.session_state.premium = False
             st.rerun()
 
-# --- 5. FUNCIÓN PARA MOSTRAR ÍTEMS CON BLOQUEO ---
-def mostrar_item(codigo, descripcion):
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        st.write(f"**{codigo}** - {descripcion}")
-    with col2:
-        # Si no es premium, el selector está deshabilitado
-        return st.selectbox("Estado", ["Pendiente", "Cumple", "No Cumple", "N/A"], 
-                            key=codigo, disabled=not st.session_state.premium)
-
-# --- 6. NAVEGACIÓN DE PANTALLAS ---
+# --- 5. LÓGICA DE PANTALLAS ---
 
 if st.session_state.pantalla == 'splash':
     st.markdown('<div style="text-align:center; margin-top:150px;">', unsafe_allow_html=True)
     st.image("https://raw.githubusercontent.com/germalem-eng/grupo_jpl_ap/main/Logos/foto_logo_jpl.jpg", width=250)
-    st.markdown("<h1 style='color:#800000; font-size:60px;'>L.I.N.A.</h1>", unsafe_allow_html=True)
-    st.markdown("<p>Legalidad e Innovación en Normativa Aplicada</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='color:#800000; font-size:60px;'>APP JPL</h1>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
-    time.sleep(3)
+    time.sleep(2)
     st.session_state.pantalla = 'inicio'
     st.rerun()
 
 elif st.session_state.pantalla == 'inicio':
-    st.markdown('<div class="top-bar-jpl"><h2>PROYECTO L.I.N.A.</h2></div>', unsafe_allow_html=True)
-    st.markdown('<div class="card-proceso"><h3>SST - Grupo JPL</h3><p>Gestión avanzada de Estándares Mínimos (Res. 0312/2019)</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="top-bar-jpl"><h1>APP JPL</h1></div>', unsafe_allow_html=True)
     
-    if st.button("🛡️ EVALUACIÓN TÉCNICA (SST)"):
-        st.session_state.pantalla = 'sst'
-        st.rerun()
-    if st.button("💰 PLANES Y LICENCIAS"):
-        st.session_state.pantalla = 'licencias'
-        st.rerun()
+    st.markdown("### Seleccione el nivel de evaluación:")
+    
+    # Los 3 botones que solicitaste según tus apuntes
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("Empresas < 10\n(7 Estándares)"):
+            st.session_state.nivel = "7"
+            st.session_state.pantalla = 'evaluacion'
+            st.rerun()
+    with col2:
+        if st.button("Empresas 11-50\n(21 Estándares)"):
+            st.session_state.nivel = "21"
+            st.session_state.pantalla = 'evaluacion'
+            st.rerun()
+    with col3:
+        if st.button("Empresas > 50\n(60 Estándares)"):
+            st.session_state.nivel = "60"
+            st.session_state.pantalla = 'evaluacion'
+            st.rerun()
 
-elif st.session_state.pantalla == 'sst':
-    st.markdown('<div class="top-bar-jpl"><h3>AUDITORÍA TÉCNICA</h3></div>', unsafe_allow_html=True)
-    
-    nivel = st.radio("Nivel de Empresa:", ["7 Ítems", "21 Ítems", "60 Ítems"], horizontal=True)
+elif st.session_state.pantalla == 'evaluacion':
+    st.markdown(f'<div class="top-bar-jpl"><h3>EVALUACIÓN {st.session_state.nivel} ÍTEMS</h3></div>', unsafe_allow_html=True)
     
     if not st.session_state.premium:
-        st.warning("⚠️ MODO VISTA PREVIA: Solo los clientes asociados pueden modificar los ítems.")
-    
-    st.markdown('<div class="card-proceso">', unsafe_allow_html=True)
-    mostrar_item("1.1.1", "Responsable del Sistema")
-    mostrar_item("1.1.3", "Asignación de Recursos")
-    
-    if "21 Ítems" in nivel or "60 Ítems" in nivel:
-        mostrar_item("2.1.1", "Descripción Sociodemográfica")
-    
-    if "60 Ítems" in nivel:
-        mostrar_item("4.1.1", "Plan de Emergencias")
-    st.markdown('</div>', unsafe_allow_html=True)
+        st.warning("⚠️ MODO VISTA PREVIA: Solo los Asociados Actuales o Clientes Premium pueden interactuar y modificar los ítems.")
+    else:
+        st.success("✅ MODO EDICIÓN ACTIVO: Puede gestionar los estándares.")
 
+    # Función para mostrar los ítems con el candado (disabled si no es premium)
+    def mostrar_item(cod, desc):
+        st.markdown(f'<div class="card-proceso"><b>{cod}</b> - {desc}</div>', unsafe_allow_html=True)
+        return st.selectbox("Calificación:", ["Pendiente", "Cumple", "No Cumple", "N/A"], 
+                            key=cod, disabled=not st.session_state.premium)
+
+    # --- LISTADO DE ÍTEMS SEGÚN EL NIVEL SELECCIONADO ---
+    if st.session_state.nivel == "7":
+        mostrar_item("1.1.1", "Responsable del Sistema (Licencia y Curso 50h)")
+        mostrar_item("1.1.3", "Asignación de recursos")
+        # Agregar los otros 5 aquí...
+        
+    elif st.session_state.nivel == "21":
+        mostrar_item("1.1.1", "Responsable del Sistema")
+        mostrar_item("2.1.1", "Descripción sociodemográfica")
+        # Agregar los otros 19 aquí...
+        
+    elif st.session_state.nivel == "60":
+        mostrar_item("1.1.1", "Responsable del Sistema")
+        mostrar_item("4.1.1", "Plan de emergencias")
+        # Agregar los otros 58 aquí...
+
+    # Botones de acción
     if st.session_state.premium:
-        if st.button("💾 GUARDAR CAMBIOS"):
+        if st.button("💾 GUARDAR AVANCE"):
             st.balloons()
-            st.success("Guardado exitoso.")
-
-elif st.session_state.pantalla == 'licencias':
-    st.markdown('<div class="top-bar-jpl"><h3>SOLUCIONES PREMIUM</h3></div>', unsafe_allow_html=True)
-    st.write("Para activar el modo edición, contacta a Soluciones MyM.")
+            st.success("Datos guardados en el servidor de Soluciones MyM.")
+    
     if st.button("⬅️ VOLVER AL MENÚ"):
         st.session_state.pantalla = 'inicio'
         st.rerun()
-
-# --- BARRA INFERIOR ---
-if st.session_state.pantalla != 'splash':
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    cols = st.columns(3)
-    with cols[0]:
-        if st.button("🏠"): st.session_state.pantalla = 'inicio'; st.rerun()
-    with cols[1]:
-        if st.button("🛡️"): st.session_state.pantalla = 'sst'; st.rerun()
-    with cols[2]:
-        if st.button("📊"): st.info("Reportes próximamente")
